@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: Автосалон
+  description: |
+    This is a sample Сar showroom Service based on the OpenAPI 3.0 specification.
+  version: 0.0.3
+servers:
+- url: /
+tags:
+- name: Car
+paths:
+  /cars:
+    get:
+      tags:
+      - Car
+      description: Получение списка автомобилей в автосалоне
+      operationId: cars_get
+      responses:
+        "200":
+          description: Список автомобилей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Car'
+                x-content-type: application/json
+        "400":
+          description: Ошибка получение списка автомобилей
+      x-openapi-router-controller: swagger_server.controllers.car_controller
+    post:
+      tags:
+      - Car
+      description: Добавления автомобиля на парковку
+      operationId: cars_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car'
+        required: true
+      responses:
+        "200":
+          description: Автомобиль успешно добавлен
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Id of a new car is 35
+                x-content-type: text/plain
+        "400":
+          description: Ошибка при добавления автомбиля
+      x-openapi-router-controller: swagger_server.controllers.car_controller
+  /cars/{carId}:
+    get:
+      tags:
+      - Car
+      description: Получение информации о госте по номеру
+      operationId: cars_car_id_get
+      parameters:
+      - name: carId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Автомобиль
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        "404":
+          description: Автомобиль не найден
+      x-openapi-router-controller: swagger_server.controllers.car_controller
+    put:
+      tags:
+      - Car
+      summary: Обновление автомобиля
+      description: Изменение информации об автомобиле по номеру id
+      operationId: cars_car_id_put
+      parameters:
+      - name: carId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Car'
+      responses:
+        "200":
+          description: Автомобиль успешно изменен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Car'
+        "404":
+          description: Автомобиль не найден
+      x-openapi-router-controller: swagger_server.controllers.car_controller
+    delete:
+      tags:
+      - Car
+      description: Получение информации о госте по номеру
+      operationId: cars_car_id_delete
+      parameters:
+      - name: carId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Автомобиль успешно удален
+        "404":
+          description: Автомобиль не найден
+      x-openapi-router-controller: swagger_server.controllers.car_controller
+components:
+  schemas:
+    Car:
+      required:
+      - brand
+      - countOwners
+      - mileage
+      - model
+      - price
+      - year
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+          readOnly: true
+          example: 123
+        brand:
+          type: string
+          description: Brand of car
+          example: Mercedes-Benz
+        model:
+          type: string
+          description: Model of car
+          example: G-Class
+        mileage:
+          minimum: 0
+          type: integer
+          description: Mileage of car
+          example: 12500
+        countOwners:
+          minimum: 0
+          type: integer
+          description: Number of owners
+          example: 3
+        year:
+          minimum: 1900
+          type: integer
+          description: Year of manufacture of car
+          example: 2012
+        price:
+          minimum: 0
+          type: integer
+          description: Price of car
+          example: 2150000
+      example:
+        year: 2012
+        price: 2150000
+        model: G-Class
+        id: 123
+        countOwners: 3
+        brand: Mercedes-Benz
+        mileage: 12500
+

@@ -1,0 +1,22 @@
+version: '3.5'
+services:
+  showroom:
+    build: .
+    ports:
+      - 8080:8080
+  
+  prometheus:
+    build:
+      context: .
+      dockerfile: docker-prometheus.yml
+    ports:
+      - 9090:9090    
+    depends_on:
+      - showroom
+  
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
