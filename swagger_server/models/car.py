@@ -59,6 +59,15 @@ class Car(Model):
         self._year = year
         self._price = price
 
+    def to_dict(self):
+        return {"brand": self._brand,
+    "countOwners": self._count_owners,
+    "id": self._id,
+    "mileage": self._mileage,
+    "model": self._model,
+    "price": self._price,
+    "year": self._year}
+
     @classmethod
     def from_dict(cls, dikt) -> 'Car':
         """Returns the dict as a model

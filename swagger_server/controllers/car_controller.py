@@ -5,6 +5,7 @@ import time
 from flask import request
 from swagger_server.models.car import Car  # noqa: E501
 from swagger_server import util
+from flask import jsonify
 from prometheus_flask_exporter import PrometheusMetrics
 from swagger_server.models.repository import showroom
 from swagger_server.__main__ import get_metrics
@@ -47,7 +48,7 @@ def cars_car_id_get(car_id):  # noqa: E501
     """
     for car in showroom.Cars:
         if car._id == car_id:
-            return [car], '200'
+            return car.to_dict(), '200'
     return '400'
 
 @car_counter
@@ -83,7 +84,7 @@ def cars_get():  # noqa: E501
     :rtype: List[Car]
     """
     time.sleep(10)
-    return showroom.Cars, '200'
+    return jsonify(showroom.Cars), '200'
 
 @metrics.counter('cnt_post', 'Number of invocations cars post', labels={
         'status': lambda resp: resp.status_code
