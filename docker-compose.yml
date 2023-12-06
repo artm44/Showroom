@@ -4,6 +4,9 @@ services:
     build: .
     ports:
       - 8080:8080
+    depends_on:
+      loki:
+        condition: service_healthy
   
   prometheus:
     build:
@@ -15,8 +18,25 @@ services:
       - showroom
   
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:master
     ports:
       - 3000:3000
     depends_on:
-      - prometheus
+      loki:
+        condition: service_healthy
+  
+  loki:
+    container_name: loki
+    image: grafana/loki:master
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/local-config.yaml
+    healthcheck:
+      test: wget -q --tries=1 -O- http://localhost:3100/ready 
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    # volumes:
+    #   - ./local-config.yaml:/etc/loki/local-config.yaml
+
