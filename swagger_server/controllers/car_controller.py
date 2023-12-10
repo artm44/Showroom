@@ -43,13 +43,13 @@ def cars_car_id_delete(car_id):  # noqa: E501
 
     :rtype: None
     """
-    logger.info(f'Попытка удаления автомобиля {car_id}', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put"}})
+    logger.info(f'Попытка удаления автомобиля', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put"}})
     for car in showroom.Cars:
         if car._id == car_id:
             showroom.Cars.remove(car)
-            logger.debug(f'Успешное удаление автомобиля {car_id}', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put", "status_code":200}})
+            logger.debug(f'Успешное удаление автомобиля', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put", "status_code":200}})
             return '200'
-    logger.warning(f'Неуспешная попытка удаления автомобиля {car_id}', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put", "status_code":400}})
+    logger.warning(f'Неуспешная попытка удаления автомобиля', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put", "status_code":400}})
     return '400'
 
 @car_counter
@@ -63,11 +63,11 @@ def cars_car_id_get(car_id):  # noqa: E501
 
     :rtype: Car
     """
-    logger.info(f'Попытка получения автомобиля {car_id}', extra={'tags': {"car": car_id, "funcName": "cars_car_id_get"}})
+    logger.info(f'Попытка получения автомобиля', extra={'tags': {"car": car_id, "funcName": "cars_car_id_get"}})
     for car in showroom.Cars:
         if car._id == car_id:
             return car.to_dict(), '200'
-    logger.warning(f'Неуспешная попытка получения автомобиля {car_id}', extra={'tags': {"car": car_id, "funcName": "cars_car_id_get", "status_code":400}})
+    logger.warning(f'Неуспешная попытка получения автомобиля', extra={'tags': {"car": car_id, "funcName": "cars_car_id_get", "status_code":400}})
     return '400'
 
 @car_counter
@@ -83,14 +83,14 @@ def cars_car_id_put(car_id, body=None):  # noqa: E501
 
     :rtype: Car
     """
-    logger.info(f'Попытка обновления автомобиля {car_id}', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put"}})
+    logger.info(f'Попытка обновления автомобиля', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put"}})
     if connexion.request.is_json:
         body = Car.from_dict(connexion.request.get_json())  # noqa: E501
     for i in range(len(showroom.Cars)):
         if (showroom.Cars[i]._id == car_id):
             body.id = car_id
             showroom.Cars[i] = body
-            logger.debug(f'Успешное обновление автомобиля {car_id}', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put", "status_code":200}})
+            logger.debug(f'Успешное обновление автомобиля', extra={'tags': {"car": car_id, "funcName": "cars_car_id_put", "status_code":200}})
             return '200'
     return '400'
 
@@ -126,5 +126,5 @@ def cars_post(body):  # noqa: E501
     body.id = showroom.index
     showroom.Cars.append(body)
     showroom.index += 1
-    logger.info(f'Добавление нового автомобиля {body.id}', extra={'tags': {"car": body.id, "funcName": "cars_post", "status_code":200}})
+    logger.info(f'Добавление нового автомобиля', extra={'tags': {"car": body.id, "funcName": "cars_post", "status_code":200}})
     return "Id of a new car is " + str(body.id), '200' 
