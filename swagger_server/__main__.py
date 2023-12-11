@@ -3,12 +3,10 @@ import connexion
 
 from swagger_server import encoder
 from prometheus_flask_exporter import PrometheusMetrics
-#from swagger_server.controllers.car_controller import metrics
 
 app = connexion.App(__name__, specification_dir='./swagger/')
 
 metrics = PrometheusMetrics(app.app)
-#metrics.info("app_info", "Application Information", version="1.0.0")
 
 def get_metrics():
     return metrics

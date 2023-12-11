@@ -37,6 +37,4 @@ services:
       timeout: 3s
       retries: 10
       start_period: 10s
-    # volumes:
-    #   - ./local-config.yaml:/etc/loki/local-config.yaml
 
