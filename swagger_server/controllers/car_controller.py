@@ -13,6 +13,11 @@ from swagger_server.__main__ import get_metrics
 metrics = get_metrics()
 metrics.info("app_info", "Application Information", version="1.0.0")
 
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
+
 import logging
 import logging_loki
 
@@ -33,6 +38,7 @@ car_counter = metrics.counter(
     })
 
 @car_counter
+@tracer.start_as_current_span(name="cars_car_id_delete")
 def cars_car_id_delete(car_id):  # noqa: E501
     """cars_car_id_delete
 
@@ -53,6 +59,7 @@ def cars_car_id_delete(car_id):  # noqa: E501
     return '400'
 
 @car_counter
+@tracer.start_as_current_span(name="cars_car_id_get")
 def cars_car_id_get(car_id):  # noqa: E501
     """cars_car_id_get
 
@@ -71,6 +78,7 @@ def cars_car_id_get(car_id):  # noqa: E501
     return '400'
 
 @car_counter
+@tracer.start_as_current_span(name="cars_car_id_put")
 def cars_car_id_put(car_id, body=None):  # noqa: E501
     """Обновление автомобиля
 
@@ -97,6 +105,7 @@ def cars_car_id_put(car_id, body=None):  # noqa: E501
 @metrics.summary('get_duration_seconds_sum', 'Get request latencies',
                  labels={'status': lambda r: r.status_code})
 @metrics.gauge('get_in_progress', 'Long running requests in progress')
+@tracer.start_as_current_span(name="cars_get")
 def cars_get():  # noqa: E501
     """cars_get
 
@@ -104,13 +113,17 @@ def cars_get():  # noqa: E501
 
     :rtype: List[Car]
     """
-    #time.sleep(10)
+    time.sleep(1)
+    with tracer.start_as_current_span(name="sleep"):
+        time.sleep(3)
+    time.sleep(1)
     logger.info(f'Запрос списка автомобилей', extra={'tags': {"funcName": "cars_get", "status_code":200}})
     return jsonify(showroom.Cars), '200'
 
 @metrics.counter('cnt_post', 'Number of invocations cars post', labels={
         'status': lambda resp: resp.status_code
     })
+@tracer.start_as_current_span(name="cars_post")
 def cars_post(body):  # noqa: E501
     """cars_post
 

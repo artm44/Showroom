@@ -5,8 +5,8 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      loki:
-        condition: service_healthy
+      - loki
+      - jaeger
   
   prometheus:
     build:
@@ -37,4 +37,9 @@ services:
       timeout: 3s
       retries: 10
       start_period: 10s
+
+  jaeger:
+    image: jaegertracing/all-in-one
+    ports:
+      - 16686:16686
 
